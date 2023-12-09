@@ -1,55 +1,59 @@
-import cv2
 import numpy as np
-from sklearn import svm
-from scipy.spatial import distance
+from scipy.spatial.distance import cosine
+from skimage import io, color, feature
+import os
 
-# Step 1: Load the images
-image_A = cv2.imread('ImageA.jpg', cv2.IMREAD_GRAYSCALE)
-image_B = cv2.imread('ImageB.jpg', cv2.IMREAD_GRAYSCALE)
-image_C = cv2.imread('ImageC.jpg', cv2.IMREAD_GRAYSCALE)
-image_D = cv2.imread('ImageD.jpg', cv2.IMREAD_GRAYSCALE)
-image_E = cv2.imread('ImageE.jpg', cv2.IMREAD_GRAYSCALE)
+# Function to generate a digital pattern from a handwritten image
+def generate_digital_pattern(image_path):
+    # Load the image
+    image = io.imread(image_path)
 
-# Step 2: Preprocess the images
-def preprocess_image(image):
-    # Apply Gaussian blur
-    image = cv2.GaussianBlur(image, (5, 5), 0)
-    
-    # Binarize the image
-    _, image = cv2.threshold(image, 127, 255, cv2.THRESH_BINARY_INV)
-    
-    # Resize the image to a standard size
-    image = cv2.resize(image, (32, 32))
-    
-    # Flatten the image
-    image = image.flatten()
-    
-    return image
+    # Check if the image is not already a numpy array
+    if not isinstance(image, np.ndarray):
+        # Convert the image to RGB
+        image = image.convert('RGB')
 
-# Preprocess all images
-images = [image_A, image_B, image_C, image_D, image_E]
-preprocessed_images = [preprocess_image(image) for image in images]
+    # Convert the RGB image to a numpy array
+    image_array = np.array(image)
 
-# Step 3: Train a SVM model on the preprocessed images
-labels = [0, 1, 2, 3, 4]
-model = svm.SVC(gamma=0.001, C=100.)
-model.fit(preprocessed_images, labels)
+    # Calculate the grayscale values for each pixel
+    grayscale_array = 0.2125 * image_array[:, :, 0] + 0.7154 * image_array[:, :, 1] + 0.0721 * image_array[:, :, 2]
 
-# Step 4: Generate a unique digital pattern (UDP) for each image
-udps = model.predict(preprocessed_images)
+    # Convert the grayscale array back to an image
+    grayscale_image = Image.fromarray(grayscale_array.astype(np.uint8))
 
-# Step 5: Compare the UDPs to detect potential plagiarism
-for i in range(len(udps)):
-    for j in range(i + 1, len(udps)):
-        # Flatten the UDPs into 1-D arrays
-        udp_i = np.array(udps[i]).flatten()
-        udp_j = np.array(udps[j]).flatten()
-        if udps[i] == udps[j]:
-            print(f"Image {i} and Image {j} might be plagiarized.")
-        # Calculate the Euclidean distance between the UDPs
-        dist = distance.euclidean(udp_i, udp_j)
-        print(f"Image {i+1} and Image {j+1} have Euclidean distance = {dist}")
-        # If the distance is small, the UDPs might be plagiarized
-        if dist < 0.2:
-            sim_score = ((1-dist)*100)
-            print(f"Image {i} and Image {j} might be plagiarized with {sim_score}% similarity in their UDPs.")
+    # Extract features using Histogram of Oriented Gradients (HOG)
+    features = feature.hog(grayscale_image, pixels_per_cell=(16, 16))
+
+    return features
+
+# Function to compare digital patterns using cosine similarity
+def compare_patterns(pattern1, pattern2):
+    # Use cosine similarity as the comparison metric
+    similarity = 1 - cosine(pattern1, pattern2)
+    return similarity
+
+# Function to scan and compare all submissions
+def scan_for_plagiarism(submission_folder):
+    submissions = os.listdir(submission_folder)
+
+    for i in range(len(submissions)):
+        for j in range(i + 1, len(submissions)):
+            pattern1 = generate_digital_pattern(os.path.join(submission_folder, submissions[i]))
+            pattern2 = generate_digital_pattern(os.path.join(submission_folder, submissions[j]))
+
+            # Ensure that patterns have the same length
+            min_len = min(len(pattern1), len(pattern2))
+            pattern1 = pattern1[:min_len]
+            pattern2 = pattern2[:min_len]
+
+            similarity = compare_patterns(pattern1, pattern2)
+
+            # Adjust the threshold based on your requirements
+            if similarity > 0.55:
+                print(f"Potential plagiarism detected between {submissions[i]} and {submissions[j]} with a similarity score = {similarity*100:.2f}%")
+            # print(f"Similarity between {submissions[i]} and {submissions[j]} = {similarity: .2f}")
+
+# Location of Submission Folder
+submission_folder = "submission_folder" #Relative Path address of your Submission Folder
+scan_for_plagiarism(submission_folder)
