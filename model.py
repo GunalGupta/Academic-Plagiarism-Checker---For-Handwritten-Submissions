@@ -1,12 +1,10 @@
-import numpy as np
-from PIL import Image
-from scipy import ndimage
 from scipy.spatial.distance import cosine
 from skimage import io, color, feature
 from udp import generate_digital_pattern, compare_patterns
 from ocr import extract_text, compare_text_content
 import os
-import requests
+from sentence_transformers import SentenceTransformer,util
+model = SentenceTransformer('all-MiniLM-L6-v2')
 
 
 # Function to scan and compare all submissions
@@ -48,26 +46,43 @@ def scan_for_plagiarism(submission_folder):
             if similarity > 0.95:
                 print(f"Complete Plagiarism detected between {submissions[i]} and {submissions[j]}")
                 excluded_docs[submissions[j]] = True
-
             # Adjust the threshold based on requirements
-            elif similarity > 0.50:
-                print(f"Potential Plagiarism detected between {submissions[i]} and {submissions[j]} with a similarity score = {similarity*100:.2f}%")
-            else:
-                # Extracting text from the suspicious submissions
+            elif similarity > 0.55:
                 text1 = text_list[i]
                 text2 = text_list[j]
 
                 # Compare extracted text
                 if text1 and text2:
-                    if compare_text_content(text1, text2):
-                        print(f"Same text content detected between {submissions[i]} and {submissions[j]}")
+                    emb1 = model.encode(text1)
+                    emb2 = model.encode(text2)
+                    cos_sim = util.cos_sim(emb1, emb2)
+                    similarity_score = cos_sim.item()
+                    if cos_sim >= 0.85:
+                        print(f"Complete Plagiarism detected between {submissions[i]} and {submissions[j]}")
                         excluded_docs[submissions[j]] = True
-                     # else: 
-                    #     print("Different text content detected.")
-                    #     print(f"{text1}")
-                    #     print(f"\n\n{text2}")
+                    else:
+                        print(f"Potential Plagiarism detected between {submissions[i]} and {submissions[j]} with a UDP score = {similarity*100:.2f}% and Content Similarity score = {similarity_score*100:.2f}% ")
                 else:
-                    print(f"Error while comparing text between {submissions[i]} and {submissions[j]}")
+                    print(f"Potential Plagiarism detected between {submissions[i]} and {submissions[j]} with a UDP score = {similarity*100:.2f}%")
+            else:
+                # Compare text from the suspicious submissions
+                text1 = text_list[i]
+                text2 = text_list[j]
+
+                # Compare extracted text
+                if text1 and text2:
+                    emb1 = model.encode(text1)
+                    emb2 = model.encode(text2)
+                    cos_sim = util.cos_sim(emb1, emb2)
+                    similarity_score = cos_sim.item()
+                    if cos_sim >= 0.85:
+                        print(f"Complete Plagiarism detected between {submissions[i]} and {submissions[j]}")
+                    elif cos_sim >= 0.75:
+                        print(f"\nPotential Plagiarism detected between {submissions[i]} and {submissions[j]} with a similarity score = {similarity_score*100:.2f}%")
+                    # else
+                    #     print(f"\nLevel 3: No Plagiarism detected between {file1} and {file2} with a similarity score = {similarity_score*100:.2f}%")
+                else:
+                    print(f"\nUnable to load extracted text for {submissions[i]} and {submissions[j]}")
 
 # Location of Submission Folder
 submission_folder = "submission_folder" #Relative Path address of your Submission Folder
