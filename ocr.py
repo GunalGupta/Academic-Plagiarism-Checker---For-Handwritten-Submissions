@@ -16,3 +16,7 @@ def extract_text(image_path):
     except Exception as e:
         print(f"Error extracting text from {image_path}: {e}")
         return ""
+
+# Function to compare extracted text content
+def compare_text_content(text1, text2):
+    return text1.lower() == text2.lower()
