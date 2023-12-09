@@ -46,3 +46,10 @@ for i in range(len(udps)):
         udp_j = np.array(udps[j]).flatten()
         if udps[i] == udps[j]:
             print(f"Image {i} and Image {j} might be plagiarized.")
+        # Calculate the Euclidean distance between the UDPs
+        dist = distance.euclidean(udp_i, udp_j)
+        print(f"Image {i+1} and Image {j+1} have Euclidean distance = {dist}")
+        # If the distance is small, the UDPs might be plagiarized
+        if dist < 0.2:
+            sim_score = ((1-dist)*100)
+            print(f"Image {i} and Image {j} might be plagiarized with {sim_score}% similarity in their UDPs.")
