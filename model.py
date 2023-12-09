@@ -4,6 +4,7 @@ from udp import generate_digital_pattern, compare_patterns
 from ocr import extract_text, compare_text_content
 import os
 from sentence_transformers import SentenceTransformer,util
+
 model = SentenceTransformer('all-MiniLM-L6-v2')
 
 

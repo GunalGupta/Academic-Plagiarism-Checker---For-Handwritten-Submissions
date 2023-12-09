@@ -1,9 +1,3 @@
-import pytesseract
-import numpy as np
-from PIL import Image
-from scipy import ndimage
-from scipy.spatial.distance import cosine
-from skimage import io, color, feature
 import os
 import requests
 from dotenv import load_dotenv
