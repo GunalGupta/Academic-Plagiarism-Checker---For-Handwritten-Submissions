@@ -1,6 +1,11 @@
 import pytesseract
+import numpy as np
+from PIL import Image
+from scipy import ndimage
+from scipy.spatial.distance import cosine
+from skimage import io, color, feature
 import os
-import io
+import requests
 
 # Function to extract text from an image using Tesseract OCR
 def extract_text(image_path):
