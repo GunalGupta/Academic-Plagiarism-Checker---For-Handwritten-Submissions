@@ -104,7 +104,7 @@ Remember, your input contributes to the continuous improvement of the project, a
 *2. [Ved Vekhande](https://github.com/ved-01)* <br>
 *3. [Anubhav Dubey](https://github.com/AnubhavDubey23)* <br>
 *4. [Govind Garg](https://github.com/itsggarg)*<br>
-*5. Apurva Bajaj*
+*5. [Apurva Bajaj](https://github.com/Bajaj-Apurva)*<br>
 
 ## License
 
