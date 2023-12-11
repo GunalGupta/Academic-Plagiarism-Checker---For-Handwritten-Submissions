@@ -41,8 +41,8 @@ each pair of submission to provide a comprehensive approach to plagiarism detect
   - `scikit-image`
   - `os`
   - `requests`
-  - `sentence-transformers`
-  - `openai`
+  - `sentence-transformers==2.2.2`
+  - `openai==1.3.3`
 
 ## Installation
 
@@ -65,7 +65,7 @@ each pair of submission to provide a comprehensive approach to plagiarism detect
 ## Usage
 
 ```
-python model.py
+streamlit run streamlit.py
 ```
 
 ## Methodology
