@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 text_extract_api_key = os.getenv("text_extract_api_key")
 
-# Function to extract text from an image using Tesseract OCR
+# Function to extract text from an image using OCR
 def extract_text(image_path):
     try:
         url = "https://api.apilayer.com/image_to_text/upload"
