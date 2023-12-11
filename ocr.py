@@ -27,16 +27,6 @@ def extract_text(image_path):
         print(f"Error extracting text from {image_path}: {e}")
         return ""
 
-def extract_similarity_value(similarity_string):
-    try:
-        # Try to extract the integer value from the string
-        similarity_value = int(similarity_string.split()[-1])
-        return similarity_value
-    except ValueError:
-        # Handle the case where the conversion to integer fails
-        print("Error: Could not extract similarity value from the string.")
-        return None
-
 # Function to compare extracted text content
 def compare_text_content(text1, text2):
     return text1.lower() == text2.lower()

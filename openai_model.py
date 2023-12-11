@@ -31,6 +31,17 @@ def compare_text_similarity(text1, text2):
     paraphrased = response.choices[0].message.content
     return paraphrased
 
+def extract_similarity_value(similarity_string):
+    try:
+        # Try to extract the integer value from the string
+        similarity_value = int(similarity_string.split()[-1])
+        return similarity_value
+    except ValueError:
+        # Handle the case where the conversion to integer fails
+        print("Error: Could not extract similarity value from the string.")
+        return None
+
+
 #example test case, keep it commented
 # text1 = "Renewable energy sources such as solar and wind power are crucial for reducing our dependence on fossil fuels and mitigating the impacts of climate change. By investing in clean and sustainable energy, we can contribute to a healthier planet for future generations."
 # text2 = "Effective communication is essential in any organization to foster teamwork, share information, and achieve common goals. Clear and open communication helps in preventing misunderstandings, building trust, and creating a positive work environment."
