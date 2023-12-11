@@ -58,9 +58,9 @@ each pair of submission to provide a comprehensive approach to plagiarism detect
     pip install -r requirements.txt
     ```
 
-3. Replace `{Your API Key}` in the code with your actual API key for OCR functionality.
+3. Replace `{Your API Key}` in the code with your actual API key for OCR functionality. The API can be found after creating an account at : (https://apilayer.com/marketplace/image_to_text-api)
 
-4. Replace `{Your API Key}` in the code with your actual API key for Open AI functionality.
+4. Replace `{Your API Key}` in the code with your actual API key for Open AI functionality. 
 
 ## Usage
 
