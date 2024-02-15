@@ -21,9 +21,7 @@ handwritten assignments. A simple photograph of a person’s assignment can spre
 this practice to a great extent. Handwritten assignments shared among peers further undermine the prospects of acquiring the quality of learning that is achieved 
 only when assignments are completed by the individual. It would be very simple to prevent plagiarism by accepting typed assignments and running a plagiarism check 
 on them; however, many regions do not have access to computers, so accepting typed assignments in such situations would be impossible. Moreover, deciphering who 
-copied from whom is a very time-consuming and difficult task for teachers. This is a situation which can be remedied by deploying a set of robust plagiarism detection 
-algorithms in a model. The system uses a combination of digital pattern analysis through generating the UDP (Unique Digital Pattern) and text content comparison for 
-each pair of submission to provide a comprehensive approach to plagiarism detection.
+copied from whom is a very time-consuming and difficult task for teachers. 
 
 ## Features
 
